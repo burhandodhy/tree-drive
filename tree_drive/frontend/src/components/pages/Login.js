@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-import axios from 'axios'
-import { getCookie } from '../../helper/utils'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { Redirect } from 'react-router-dom'
+import { userLogin } from '../../actions/auth'
 
 class Login extends Component {
 
@@ -11,35 +13,24 @@ class Login extends Component {
     userdata: {},
   }
 
+  static propTypes = {
+    login: PropTypes.object,
+    isAuthenticated: PropTypes.bool
+  };
+
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
   onSubmit = e => {
     e.preventDefault();
-
-    const request = axios.create({
-      headers: { 'X-CSRFToken': getCookie('csrftoken') }
-    });
-
-    request.post('/api/login/', {
-      username: this.state.username,
-      password: this.state.password
-    })
-      .then((response) => {
-        localStorage.setItem("userdata", JSON.stringify(response.data.user));
-        this.setState({ userdata: response.data.user})
-      })
-      .catch((error) => {
-        this.setState({ error_message: 'Invalid Username or Password' })
-      });
-
+    this.props.userLogin(this.state.username, this.state.password);
   };
 
-  render() {
+  render() { 
     
-  
-    
-    if (Object.entries(this.state.userdata).length === 0  ) {
+      if( this.props.isAuthenticated ){
+        return <Redirect to="/" />
+      }
       return (
         <div>
           <h1>Login</h1>
@@ -57,16 +48,12 @@ class Login extends Component {
           </form>
         </div>
       )
-    } else {
-      return (
-        <div>
-          Welcome {this.state.userdata.username}
-        </div>
-      )
-    }
     
-
-
   }
-}
-export default Login
+} 
+
+const mapStateToProps = state => ({
+  login: state.auth.user,
+  isAuthenticated: state.auth.isAuthenticated 
+});
+export default connect(mapStateToProps, { userLogin })(Login)
