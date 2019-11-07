@@ -5,10 +5,12 @@ from django.contrib.auth import authenticate
 class UserSerializer(serializers.ModelSerializer):
   
   email = serializers.EmailField(required=True)
+  repeat_password = serializers.CharField(allow_blank=False, write_only=True)
 
   class Meta:
     model = CustomUser
-    fields = ['id', 'username', 'email', 'password', 'first_name', 'last_name', 'address', 'city', 'country', 'zip_code']
+    fields = ['id', 'username', 'email', 'password', 'repeat_password', 'first_name',
+              'last_name', 'address', 'city', 'country', 'zip_code']
     extra_kwargs = {'password': {'write_only': True}}
 
 
@@ -22,6 +24,15 @@ class UserSerializer(serializers.ModelSerializer):
           raise serializers.ValidationError("Email already exists")
 
       return value
+
+
+  def validate_password(self,value):
+    data = self.get_initial()
+ 
+    if value != data['repeat_password']:
+     raise serializers.ValidationError("Those passwords don't match.")
+
+    return value
 
   def create(self, validated_data):	
     username = validated_data.get('username')	

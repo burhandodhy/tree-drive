@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import axios from 'axios'
-import { getCookie } from '../../helper/utils'
+import { userRegistration } from '../../actions/auth'
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 
 
 class Register extends Component {
@@ -16,48 +17,11 @@ class Register extends Component {
     city : '',
     country : '',
     zip_code : '',
-    error_message: [],
-    userdata : {},
   }
 
   onSubmit = e => {
     e.preventDefault();
-
-    if( this.state.password != this.state.repeat_password ){
-      
-      let error_message = [];
-      error_message.push({ 'invalid_password': "Password didn't match" })
-      this.setState({ 'error_message': error_message })
-      return
-    }
-
-    const request = axios.create({
-      headers: { 'X-CSRFToken': getCookie('csrftoken') }
-    });
-
-    request.post('/api/user/', {
-      username: this.state.username,
-      password: this.state.password,
-      email: this.state.email,
-      first_name: this.state.first_name,
-      last_name: this.state.last_name,
-      address: this.state.address,
-      city: this.state.city,
-      country: this.state.country,
-      zip_code: this.state.zip_code,
-    })
-      .then((response) => {
-        this.setState({ userdata: response.data })
-      })
-      .catch((error) => {
-        error = Object.keys(error.response.data).map( (key, index) => {     
-          return { [key] : error.response.data[key][0] } 
-        });
-
-        this.setState({ error_message: error})
-        
-      });
-
+    this.props.userRegistration(this.state)
   };
 
 
@@ -66,11 +30,9 @@ class Register extends Component {
 
   render() {
 
-    if (Object.entries(this.state.userdata).length === 0) {
-      var error = this.state.error_message.map((value, index) => {
-        return <div className="alert alert-danger" key={index} >{Object.values(value)[0]}</div>
-      });
-
+    if (this.props.isAuthenticated) {
+      return <Redirect to="/" />
+    }
       return (
         <div>
           <h1>Register</h1>
@@ -114,22 +76,16 @@ class Register extends Component {
             <div className="form-group">
               <label>Zip Code</label>
               <input type="text" className="form-control" name="zip_code" placeholder="Zip Code" value={this.state.zip_code} onChange={this.onChange} />
-            </div>
-            {error}
+            </div> 
             <button type="submit" className="btn btn-primary">Submit</button>
           </form>
         </div>
       )
-    } else {
-      return(
-        <div>
-          <h1>Registration Successfully.</h1>
-        </div>
-      )
-
-    }
-
+  
   }
 }
 
-export default Register
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated 
+});
+export default connect(mapStateToProps,{userRegistration})(Register)

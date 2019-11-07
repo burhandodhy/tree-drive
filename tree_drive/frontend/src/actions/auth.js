@@ -81,10 +81,6 @@ export const loadUser = () => (dispatch, getState) => {
     });
   })
   .catch(err => {
-    // dispatch({
-
-    // })
-    console.log(err.response);
     
     dispatch({
       type: AUTH_ERROR
@@ -120,4 +116,54 @@ export const logOutUser = () => (dispatch, getState) => {
       console.log(err.response);
     });
 
+}
+
+
+// Register
+export const userRegistration = (state) => dispatch => {
+  
+  const { username, email, password, repeat_password, first_name, last_name, address, city, country, zip_code } = state
+  
+
+    const request = axios.create({
+      headers: { 'X-CSRFToken': getCookie('csrftoken') }
+    });
+
+    request.post('/api/user/', {
+      username: username,
+      password: password,
+      repeat_password: repeat_password,
+      email: email,
+      first_name: first_name,
+      last_name: last_name,
+      address: address,
+      city: city,
+      country: country,
+      zip_code: zip_code,
+    })
+      .then((response) => {
+        dispatch({
+          type: REGISTER_SUCCESS,
+          payload: response.data
+        })
+ 
+  
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+        
+        error = Object.keys(error.response.data).map( (key, index) => {     
+          let errors = {
+            msg: error.response.data[key][0] ,
+            status: key
+          }
+          dispatch({
+            type: GET_ERRORS,
+            payload: errors
+          })
+        });
+
+ 
+      });
+  
 }

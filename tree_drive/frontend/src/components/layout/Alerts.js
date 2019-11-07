@@ -6,21 +6,22 @@ import PropTypes from 'prop-types'
 class Alerts extends Component {
 
   static propTypes = {
-    error:    PropTypes.object.isRequired,
+    error: PropTypes.object.isRequired,
     message: PropTypes.object.isRequired
   }
   componentDidUpdate(prevProps) {
     
     const {error, alert} = this.props
+ 
     if (error != prevProps){
       if(error.msg.username){
         alert.error(`Username: ${error.msg.username.join()}`)
-      }
-      if (error.msg.password) {
+      } else if (error.msg.password) {
         alert.error(`Password: ${error.msg.password.join()}`)
-      }
-      if (error.msg.non_field_errors) {
+      } else if (error.msg.non_field_errors) {
         alert.error(`Login: ${error.msg.non_field_errors.join()}`)
+      } else{
+        alert.error(`${error.msg}`)
       }
     }
 
