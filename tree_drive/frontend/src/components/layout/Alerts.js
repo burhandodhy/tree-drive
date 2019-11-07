@@ -9,9 +9,9 @@ class Alerts extends Component {
     message: PropTypes.object.isRequired
   };
   componentDidUpdate(prevProps) {
-    const { error, alert } = this.props;
+    const { error, alert, message } = this.props;
 
-    if (error != prevProps) {
+    if (error !== prevProps.error) {
       if (error.msg.username) {
         alert.error(`Username: ${error.msg.username.join()}`);
       } else if (error.msg.password) {
@@ -21,6 +21,10 @@ class Alerts extends Component {
       } else {
         alert.error(`${error.msg}`);
       }
+    }
+
+    if (message !== prevProps.message) {
+      if (message.success) alert.success(message.success);
     }
   }
 

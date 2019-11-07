@@ -12,6 +12,7 @@ import {
 
 import { getCookie } from "../helper/utils";
 import { GET_ERRORS } from "../actionTypes/errors";
+import { createMessage } from "../actions/messages"
 
 // Login
 export const userLogin = (username, password) => dispatch => {
@@ -29,6 +30,8 @@ export const userLogin = (username, password) => dispatch => {
         type: LOGIN_SUCCESS,
         payload: response.data
       });
+      dispatch(createMessage({ success: "Login Successfully" }));
+      
     })
     .catch(error => {
       const errors = {
@@ -102,6 +105,7 @@ export const logOutUser = () => (dispatch, getState) => {
     .post("/api/logout/", null, config)
     .then(res => {
       dispatch({ type: LOGOUT_SUCCESS });
+      dispatch(createMessage({ 'success': "Logout Successfully" }));
     })
     .catch(err => {
       console.log(err.response);
@@ -145,6 +149,8 @@ export const userRegistration = state => dispatch => {
         type: REGISTER_SUCCESS,
         payload: response.data
       });
+      dispatch(createMessage({ success: "Registration Successfully" }));
+
     })
     .catch(error => {
       error = Object.keys(error.response.data).map((key, index) => {
