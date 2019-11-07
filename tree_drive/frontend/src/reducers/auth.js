@@ -7,23 +7,22 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL
-} from '../actionTypes/auth'
+} from "../actionTypes/auth";
 
 const intialState = {
-  token: localStorage.getItem('token'),
+  token: localStorage.getItem("token"),
   isAuthenticated: null,
   isLoading: false,
-  user: null,
-}
+  user: null
+};
 
-
-export default function (state = intialState, action) {
+export default function(state = intialState, action) {
   switch (action.type) {
     case USER_LOADING:
       return {
         ...state,
         isLoading: true
-      }
+      };
 
     case USER_LOADED:
       return {
@@ -31,8 +30,7 @@ export default function (state = intialState, action) {
         user: action.payload,
         isLoading: false,
         isAuthenticated: true
-      }
-
+      };
 
     case LOGIN_SUCCESS:
     case REGISTER_SUCCESS:
@@ -41,23 +39,23 @@ export default function (state = intialState, action) {
         ...state,
         ...action.payload,
         isAuthenticated: true,
-        isLoading: false,
-      }
-    
+        isLoading: false
+      };
+
     case LOGIN_FAIL:
     case LOGOUT_SUCCESS:
     case AUTH_ERROR:
     case REGISTER_FAIL:
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
       return {
         ...state,
         token: null,
         user: null,
         isAuthenticated: false,
         isLoading: false
-      }
+      };
 
     default:
-      return state
+      return state;
   }
 }
