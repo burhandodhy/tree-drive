@@ -34,6 +34,11 @@ class Header extends Component {
           <strong>{user ? `Welcome ${user.username}` : ""}</strong>
         </span>
         <li className="nav-item">
+          <Link to="/profile" className="nav-link">
+            Profile
+          </Link>
+        </li>
+        <li className="nav-item">
           <button
             className="nav-link btn btn-info bt-sm text-light"
             onClick={this.props.logOutUser}

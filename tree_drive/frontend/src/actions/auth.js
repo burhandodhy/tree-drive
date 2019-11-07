@@ -12,7 +12,7 @@ import {
 
 import { getCookie } from "../helper/utils";
 import { GET_ERRORS } from "../actionTypes/errors";
-import { createMessage } from "../actions/messages"
+import { createMessage } from "../actions/messages";
 
 // Login
 export const userLogin = (username, password) => dispatch => {
@@ -31,7 +31,6 @@ export const userLogin = (username, password) => dispatch => {
         payload: response.data
       });
       dispatch(createMessage({ success: "Login Successfully" }));
-      
     })
     .catch(error => {
       const errors = {
@@ -105,7 +104,7 @@ export const logOutUser = () => (dispatch, getState) => {
     .post("/api/logout/", null, config)
     .then(res => {
       dispatch({ type: LOGOUT_SUCCESS });
-      dispatch(createMessage({ 'success': "Logout Successfully" }));
+      dispatch(createMessage({ success: "Logout Successfully" }));
     })
     .catch(err => {
       console.log(err.response);
@@ -150,7 +149,6 @@ export const userRegistration = state => dispatch => {
         payload: response.data
       });
       dispatch(createMessage({ success: "Registration Successfully" }));
-
     })
     .catch(error => {
       error = Object.keys(error.response.data).map((key, index) => {
@@ -163,5 +161,58 @@ export const userRegistration = state => dispatch => {
           payload: errors
         });
       });
+    });
+};
+
+// Update profile
+export const updateProfile = state => (dispatch, getState) => {
+  const {
+    email,
+    first_name,
+    last_name,
+    address,
+    city,
+    country,
+    zip_code,
+    id
+  } = state;
+
+  // Get token
+  const token = getState().auth.token;
+
+  // Header
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  };
+
+  if (token) {
+    config.headers["Authorization"] = `Token ${token}`;
+  }
+
+  axios
+    .patch(
+      `/api/user/${id}/`,
+      {
+        email: email,
+        first_name: first_name,
+        last_name: last_name,
+        address: address,
+        city: city,
+        country: country,
+        zip_code: zip_code
+      },
+      config
+    )
+    .then(response => {
+      dispatch(createMessage({ success: "Profile Updated" }));
+    })
+    .catch(error => {
+      const errors = {
+        msg: error.response.data,
+        status: error.response.status
+      };
+      dispatch({ type: GET_ERRORS, payload: errors });
     });
 };

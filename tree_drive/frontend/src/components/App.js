@@ -15,6 +15,7 @@ import Header from "./layout/Header";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Profile from "./pages/Profile";
 
 const alertOptions = {
   timeout: 3000,
@@ -36,6 +37,7 @@ class App extends React.Component {
             <Route exact path="/" component={Home} />
             <Route path="/login" component={Login} />
             <Route path="/Register" component={Register} />
+            <Route path="/profile" component={Profile} />
           </Router>
         </AlertProvider>
       </Provider>
