@@ -10,8 +10,7 @@ import {
   REGISTER_FAIL
 } from "../actionTypes/auth";
 
-import { getCookie } from "../helper/utils";
-import { GET_ERRORS } from "../actionTypes/errors";
+import { getCookie } from "../helper/utils"; 
 import { createMessage, createError } from "../actions/messages";
 
 // Login
@@ -40,7 +39,6 @@ export const userLogin = (username, password) => dispatch => {
 
 // Check user and load token.
 export const loadUser = () => (dispatch, getState) => {
-
   dispatch({ type: USER_LOADING });
 
   // Get token
@@ -140,14 +138,7 @@ export const userRegistration = state => dispatch => {
     })
     .catch(error => {
       error = Object.keys(error.response.data).map((key, index) => {
-        let errors = {
-          msg: error.response.data[key][0],
-          status: key
-        };
-        dispatch({
-          type: GET_ERRORS,
-          payload: errors
-        });
+        dispatch(createError(error.response.data[key][0], key));
       });
     });
 };
@@ -197,8 +188,6 @@ export const updateProfile = state => (dispatch, getState) => {
       dispatch(createMessage({ success: "Profile Updated" }));
     })
     .catch(error => {
-
       dispatch(createError(error.response.data, error.response.status));
-
     });
 };
