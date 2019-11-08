@@ -4,7 +4,6 @@ import { PropTypes } from "prop-types";
 import { updateProfile, loadUser } from "../../actions/auth";
 
 class Profile extends Component {
-  
   static propTypes = {
     user: PropTypes.object
   };
@@ -20,7 +19,7 @@ class Profile extends Component {
     id: ""
   };
 
-  componentDidMount() {    
+  componentDidMount() {
     this.props.loadUser();
   }
 
@@ -58,8 +57,6 @@ class Profile extends Component {
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
   render() {
-    console.log(this.props);
-    
     return (
       <div>
         <h1>Update Profile</h1>
@@ -156,4 +153,7 @@ const mapStateToProps = state => ({
   isLoading: state.auth.isLoading
 });
 
-export default connect(mapStateToProps, {updateProfile, loadUser})(Profile);
+export default connect(
+  mapStateToProps,
+  { updateProfile, loadUser }
+)(Profile);

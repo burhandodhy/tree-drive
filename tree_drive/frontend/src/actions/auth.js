@@ -93,7 +93,6 @@ export const logOutUser = () => (dispatch, getState) => {
       dispatch(createMessage({ success: "Logout Successfully" }));
     })
     .catch(err => {
-      console.log(err.response);
     });
 };
 
