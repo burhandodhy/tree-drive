@@ -3,13 +3,12 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
 import { userLogin } from "../../actions/auth";
+import Loader from "../common/Loader";
 
 class Login extends Component {
   state = {
     username: "",
     password: "",
-    error_message: "",
-    userdata: {}
   };
 
   static propTypes = {
@@ -27,7 +26,7 @@ class Login extends Component {
   render() {
     if (this.props.isAuthenticated) {
       return <Redirect to="/" />;
-    }
+    }    
     return (
       <div>
         <h1>Login</h1>
@@ -55,7 +54,7 @@ class Login extends Component {
             />
           </div>
           <div>{this.state.error_message}</div>
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary" >
             Submit
           </button>
         </form>
@@ -66,7 +65,7 @@ class Login extends Component {
 
 const mapStateToProps = state => ({
   login: state.auth.user,
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
 });
 export default connect(
   mapStateToProps,

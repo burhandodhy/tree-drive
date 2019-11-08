@@ -12,7 +12,7 @@ import {
 
 import { getCookie } from "../helper/utils";
 import { GET_ERRORS } from "../actionTypes/errors";
-import { createMessage } from "../actions/messages";
+import { createMessage, createError } from "../actions/messages";
 
 // Login
 export const userLogin = (username, password) => dispatch => {
@@ -33,30 +33,18 @@ export const userLogin = (username, password) => dispatch => {
       dispatch(createMessage({ success: "Login Successfully" }));
     })
     .catch(error => {
-      const errors = {
-        msg: error.response.data,
-        status: error.response.status
-      };
-
+      dispatch(createError(error.response.data, error.response.status));
       dispatch({ type: LOGIN_FAIL });
-      dispatch({
-        type: GET_ERRORS,
-        payload: errors
-      });
     });
 };
 
 // Check user and load token.
 export const loadUser = () => (dispatch, getState) => {
-  // User loading
+
   dispatch({ type: USER_LOADING });
 
   // Get token
   const token = getState().auth.token;
-
-  if (!token) {
-    return;
-  }
 
   // Header
   const config = {
@@ -209,10 +197,8 @@ export const updateProfile = state => (dispatch, getState) => {
       dispatch(createMessage({ success: "Profile Updated" }));
     })
     .catch(error => {
-      const errors = {
-        msg: error.response.data,
-        status: error.response.status
-      };
-      dispatch({ type: GET_ERRORS, payload: errors });
+
+      dispatch(createError(error.response.data, error.response.status));
+
     });
 };

@@ -10,6 +10,8 @@ import Alerts from "./layout/Alerts";
 
 import store from "../store";
 import { loadUser } from "../actions/auth";
+import PrivateRoute from "./common/PrivateRoute"
+
 
 import Header from "./layout/Header";
 import Home from "./pages/Home";
@@ -37,7 +39,7 @@ class App extends React.Component {
             <Route exact path="/" component={Home} />
             <Route path="/login" component={Login} />
             <Route path="/Register" component={Register} />
-            <Route path="/profile" component={Profile} />
+            <PrivateRoute path="/profile" component={Profile} />
           </Router>
         </AlertProvider>
       </Provider>
