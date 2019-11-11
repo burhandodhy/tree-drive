@@ -17,11 +17,11 @@ class UserSerializer(serializers.ModelSerializer):
   def validate_email(self, value):
 
       if self.context['request'].method == 'POST' and CustomUser.objects.filter(email=value).exists():
-        raise serializers.ValidationError("Email already exists")
+        raise serializers.ValidationError('Email already exists')
 
       if self.context['request'].method == 'PATCH':
         if value != self.context['request'].user.email and CustomUser.objects.filter(email=value).exists():
-          raise serializers.ValidationError("Email already exists")
+          raise serializers.ValidationError('Email already exists')
 
       return value
 
@@ -30,7 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
     data = self.get_initial()
  
     if value != data['repeat_password']:
-     raise serializers.ValidationError("Those passwords don't match.")
+     raise serializers.ValidationError('Those passwords don\'t match.')
 
     return value
 
@@ -45,8 +45,7 @@ class UserSerializer(serializers.ModelSerializer):
     country = validated_data.get('country')	
     zip_code = validated_data.get('zip_code')
 
-    user = CustomUser.objects.create_user(	
-        username=username, password=password, email=email, first_name=first_name, last_name=last_name, address=address, city=city, country=country, zip_code=zip_code)
+    user = CustomUser.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name, address=address, city=city, country=country, zip_code=zip_code)
     return user
 
 
@@ -59,4 +58,4 @@ class LoginSerializer(serializers.Serializer):
     user = authenticate(**data)
     if user and user.is_active:
       return user
-    raise serializers.ValidationError("Incorrect Credentials")
+    raise serializers.ValidationError('Incorrect Credentials')
