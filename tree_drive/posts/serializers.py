@@ -1,20 +1,22 @@
 from rest_framework import serializers
-from posts.models import Post
+from posts.models import Post, Gallery
 from django.template.defaultfilters import slugify
 
-class PostSerialize(serializers.ModelSerializer):
-  
-  created_on = serializers.DateTimeField(format='%Y-%m-%d')
-  author = serializers.ReadOnlyField(source='author.username',)
-  
+
+class GallerySerializer(serializers.ModelSerializer):
+
   class Meta:
-    model = Post
-    fields = '__all__'
-    extra_kwargs = {'slug': {'read_only': True}}
+    model = Gallery
+    fields =('image',)
+        
 
+class PostSerialize(serializers.ModelSerializer):
 
-  def create(self, validated_data):
-    obj = Post.objects.create(**validated_data)
-    obj.slug = slugify(obj.title)
-    obj.save()
-    return obj
+    created_on = serializers.DateTimeField(format='%Y-%m-%d')
+    author = serializers.ReadOnlyField(source='author.username',)
+    gallery = GallerySerializer(many=True, read_only=True,)
+
+    class Meta:
+        model = Post
+        fields = ('__all__')
+        extra_kwargs = {'slug': {'read_only': True}}

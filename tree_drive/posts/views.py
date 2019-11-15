@@ -15,16 +15,16 @@ class PostViewSet(viewsets.ModelViewSet):
   pagination_class = PostPageNumberPagination
   http_method_names = ['get']
 
-  @action(detail=True, methods=['get'])
-  def like(self, request, *args, **kwargs):
+  @action(detail=True, methods=['get'], url_path='up-vote')
+  def up_vote(self, request, *args, **kwargs):
     post = self.get_object()
-    post.like = post.like + 1
+    post.up_vote = post.up_vote + 1
     post.save()
-    return Response('liked', status.HTTP_200_OK)
+    return Response('upvoted', status.HTTP_200_OK)
 
-  @action(detail=True, methods=['get'])
-  def dislike(self, request, *args, **kwargs):
+  @action(detail=True, methods=['get'], url_path='down-vote')
+  def down_vote(self, request, *args, **kwargs):
     post = self.get_object()
-    post.dislike = post.dislike + 1
+    post.down_vote = post.down_vote + 1
     post.save()
-    return Response('disliked', status.HTTP_200_OK)
+    return Response('downvoted', status.HTTP_200_OK)
