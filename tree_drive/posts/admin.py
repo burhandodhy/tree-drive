@@ -16,5 +16,6 @@ class PostAdmin(admin.ModelAdmin):
     inlines = [
         GalleryInline,
     ]
+    readonly_fields = ('created', 'modified', )
 
 admin.site.register(Post, PostAdmin)

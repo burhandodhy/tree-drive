@@ -12,7 +12,7 @@ class GallerySerializer(serializers.ModelSerializer):
 
 class PostSerialize(serializers.ModelSerializer):
 
-    created_on = serializers.DateTimeField(format='%Y-%m-%d')
+    created = serializers.DateTimeField(format='%Y-%m-%d')
     author = serializers.ReadOnlyField(source='author.username',)
     gallery = GallerySerializer(many=True, read_only=True,)
 
